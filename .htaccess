@@ -1,0 +1,24 @@
+# This tag ensures the rewrite module is loaded
+<IfModule mod_rewrite.c>
+  # enable the rewrite engine
+  RewriteEngine On
+  # Set your root directory
+  RewriteBase /
+
+  # remove the .php extension
+  RewriteCond %{THE_REQUEST} ^GET\ (.*)\.php\ HTTP
+  RewriteRule (.*)\.php$ $1 [R=301]
+
+  # remove index and reference the directory
+  RewriteRule (.*)/index$ $1/ [R=301]
+
+  # remove trailing slash if not a directory
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} /$
+  RewriteRule (.*)/ $1 [R=301]
+
+  # forward request to php file, **but don't redirect (bot friendly)**
+  RewriteCond %{REQUEST_FILENAME}.php -f
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule (.*) $1\.php [L]
+</IfModule>
