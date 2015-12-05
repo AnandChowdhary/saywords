@@ -22,41 +22,13 @@
 
 		<div class="container">
 
-			<?php
+			<div class="editable">
+				<h2>Title</h2>
+				<p>Start writing here...</p>
+			</div>
 
-				$servername = "localhost";
-				$username = "anand";
-				$password = "anand";
-				$dbname = "words2";
-
-				$conn = new mysqli($servername, $username, $password, $dbname);
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				} 
-
-				$sql = "SELECT * FROM content WHERE id = " . $_GET["id"];
-				$result = $conn->query($sql);
-
-				if ($result->num_rows > 0) {
-					while($row = $result->fetch_assoc()) {
-				?>
-
-				<div class="editable">
-					<?php echo urldecode($row["content"]); ?>
-				</div>
-
-				<?php
-					}
-				} else {
-					echo "0 results";
-				}
-				$conn->close();
-
-			?>
-
-			<form action="republish.php" method="post">
+			<form action="publish.php" method="post">
 				<textarea  style="display: none" id="contt" name="contt"></textarea>
-				<input style="display: none" name="id" value="<?php echo $_GET['id'] ?>">
 				<input type="submit" value="Save" class="save-btn">
 			</form>
 

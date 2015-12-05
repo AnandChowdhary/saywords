@@ -1,67 +1,67 @@
-<?php
-
-	session_start();
-
-	if (isset($_SESSION["words"])) {
-		header("Location: dashboard.php");
-	}
-
-?>
-<!doctype html>
-<html lang="en">
+<?php include "session.php" ?>
+<!doctype html lang="en">
+<html>
 
 	<head>
 
-		<title>Words</title>
-
 		<meta charset="utf-8">
-		<meta name="author" content="Anand Chowdhary">
-		<meta name="description" content="Words doesn't come in the way of you and your thoughts.">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="icon" type="image/png" href="icon.png">
-		<link rel="apple-touch-icon-precomposed" href="icon.png">
+		<title>Words 3</title>
 
-		<link rel="stylesheet" type="text/css" href="//anandchowdhary.com/css/normalize.css">
-		<link rel="stylesheet" type="text/css" href="//anandchowdhary.com/css/skeleton.css">
-		<link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="styles.css">
-
-		<script src="//use.typekit.net/rpy8gxl.js"></script>
-		<script>try{Typekit.load();}catch(e){}</script>
 
 	</head>
 
 	<body>
 
-		<div class="center-middle">
-			<div class="logo"><i class="ion-heart"></i></diV>
-			<p class="hero"><b>Words</b> doesn&rsquo;t come in the way<br>of you and your thoughts.</p>
-			<form id="loginForm" method="post" action="checklogin.php">
-				<input class="login" type="password" name="password" placeholder="Login">
-				<input class="hide" type="submit">
-				<div class="password-tt">Enter your password</div>
-			</div>
-		</div>
+		<div class="container">
 
-		<script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-		<script type="text/javascript">
-			$(function() {
-				$(".login").focus(function() {
-					$(".password-tt").show();
-				});
-				$(".login").blur(function() {
-					$(".password-tt").hide();
-				});
-				$(".login").keydown(function() {
-					if ($(this).val().length == 7) {
-						setTimeout(function() {
-							$("#loginForm").submit();
-						}, 1);
+			<p style="margin-bottom: 30px;"><strong>Words 3</strong></p>
+
+			<?php
+
+				$servername = "localhost";
+				$username = "anand";
+				$password = "anand";
+				$dbname = "words2";
+
+				$conn = new mysqli($servername, $username, $password, $dbname);
+				if ($conn -> connect_error) {
+					die("Connection failed: " . $conn -> connect_error);
+				} 
+
+				$sql = "SELECT * FROM content ORDER BY id DESC";
+				$result = $conn -> query($sql);
+
+				if ($result -> num_rows > 0) {
+					while($row = $result -> fetch_assoc()) {
+				?>
+
+				<a class="row" href="view.php?id=<?php echo $row['id'] ?>">
+					<div class="col-md-3 date"><?php echo $row["date"] ?></div>
+					<?php
+						$semiinitial = explode("<h2>", urldecode($row["content"]));
+						$initial = explode("</h2>", $semiinitial[1]);
+						$final = $initial[0];
+					?>
+					<div class="col-md-9"><?php echo $final; ?></div>
+				</a>
+
+				<?php
 					}
-				});
-			});
-		</script>
+				} else {
+					echo "0 results";
+				}
+				$conn -> close();
+
+			?>
+
+			<p style="margin-top: 30px;"><a href="write.php">Write</a> | <a href="logout.php">Log out</a></p>
+
+		</div>
 
 	</body>
 
