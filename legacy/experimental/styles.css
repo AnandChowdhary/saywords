@@ -1,0 +1,46 @@
+body {
+	font-size: 16px;
+	margin: 50px 0;
+	line-height: 1.6;
+}
+
+.container {
+	max-width: 720px;
+}
+
+.row {
+	display: block;
+	padding: 15px;
+	border-left: 1px solid #eee;
+	border-top: 1px solid #eee;
+	border-right: 1px solid #eee;
+	color: inherit;
+}
+.row:last-child {
+	border-bottom: 1px solid #eee;
+}
+
+.date {
+	color: #aaa;
+}
+
+.editable {
+	border: 1px solid #eee;
+	padding: 50px;
+	margin-top: 20px;
+}
+
+[name="titlea"] {
+	padding: 20px;
+	font-size: 20px;
+}
+
+h2 {
+	margin-top: 0;
+	margin-bottom: 30px;
+}
+
+.save-btn {
+	padding: 7px 15px;
+	margin-top: 20px;
+}

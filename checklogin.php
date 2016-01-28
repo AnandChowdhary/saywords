@@ -1,12 +1,19 @@
 <?php
 
+	$password = $_POST["password"];
 
-	if ($_POST["pass"] == "somuch17") {
+	if ($password == "password") {
+
 		session_start();
-		$_SESSION["code"] = "hello";
-		header("Location: index.php");
+		$_SESSION["words"] = 1;
+
+		include "log.php";
+		header("Location: dashboard.php");
+
 	} else {
-		header("Location: login.php");
+
+		header("Location: index.php");
+
 	}
 
 ?>

@@ -1,17 +1,34 @@
-<?php include "session.php" ?>
-<!doctype html lang="en">
-<html>
+<?php
+
+	$now = $_GET['id'];
+	include "session.php";
+	$result = mysqli_query($con, "SELECT * FROM content WHERE id = " . $_GET['id']);
+
+?>
+
+<!doctype html>
+<html lang="en">
 
 	<head>
 
+		<title>Words</title>
+
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="author" content="Anand Chowdhary">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>Words 3</title>
+		<link rel="icon" type="image/png" href="http://pbs.twimg.com/profile_images/443647446430646273/3KPu2McK.png">
+		<link rel="apple-touch-icon-precomposed" href="http://pbs.twimg.com/profile_images/443647446430646273/3KPu2McK.png">
 
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="styles.css">
+
+		<!--[if lt IE 9]>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
 
 	</head>
 
@@ -19,41 +36,33 @@
 
 		<div class="container">
 
+			<div class="col-md-7">
+
 			<?php
 
-				$servername = "localhost";
-				$username = "anand";
-				$password = "anand";
-				$dbname = "words2";
-
-				$conn = new mysqli($servername, $username, $password, $dbname);
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				} 
-
-				$sql = "SELECT * FROM content WHERE id = " . $_GET["id"];
-				$result = $conn->query($sql);
-
-				if ($result->num_rows > 0) {
-					while($row = $result->fetch_assoc()) {
-				?>
-
-				<div class="editable">
-					<?php echo urldecode($row["content"]); ?>
-				</div>
-
-				<?php
-					}
-				} else {
-					echo "0 results";
+				while($row = mysqli_fetch_array($result)) {
+					echo '<h1>' . $row["title"] . '</h1>';
+					echo '<textarea disabled>' . $row["data"] . '</textarea>';
+					echo '<p class="posted-on">Published on ' . $row["created_on"] . '. Last modified on ' . $row["updated_on"] . '</p>';
 				}
-				$conn->close();
 
 			?>
 
-			<p style="margin-top: 30px;"><a href="index.php">Home</a>  | <a href="delete.php?id=<?php echo $_GET['id'] ?>">Delete</a>  | <a href="logout.php">Log out</a></p>
+			<p>&nbsp;</p><p><a href="index.php">&larr; Back Home</a></p>
+
+			</div>
 
 		</div>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="elastic.js"></script>
+		<script type="text/javascript">
+
+			$(function() {
+				$("textarea").elastic();
+			});
+
+		</script>
 
 	</body>
 

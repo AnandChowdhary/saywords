@@ -1,82 +1,118 @@
-<?php include "session.php" ?>
-<!doctype html lang="en">
-<html>
+<?php
+
+	include "session.php";
+
+	$result = mysqli_query($con, "SELECT * FROM content WHERE id = " . $_GET['id']);
+	while($row = mysqli_fetch_array($result)) {
+
+?>
+<!doctype html>
+<html lang="en">
 
 	<head>
 
+		<title>Words</title>
+
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="author" content="Anand Chowdhary">
+		<meta name="description" content="Words doesn't come in the way of you and your thoughts.">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>Words 3</title>
+		<link rel="icon" type="image/png" href="icon.png">
+		<link rel="apple-touch-icon-precomposed" href="icon.png">
 
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="//anandchowdhary.com/css/normalize.css">
+		<link rel="stylesheet" type="text/css" href="//anandchowdhary.com/css/skeleton.css">
+		<link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+		<script type="text/javascript" src="libs/FileSaver.min.js"></script>
+		<script type="text/javascript" src="libs/Blob.min.js"></script>
+		<script type="text/javascript" src="libs/screenfull.min.js"></script>
+		<script type="text/javascript" src="utils.js"></script>
+		<script type="text/javascript" src="editor.js"></script>
+		<script type="text/javascript" src="ui.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="zen.css">
+		<link rel="stylesheet" type="text/css" href="fonts.css">
 		<link rel="stylesheet" type="text/css" href="styles.css">
-		<script src="//cdn.jsdelivr.net/medium-editor/latest/js/medium-editor.min.js"></script>
-		<link rel="stylesheet" href="//cdn.jsdelivr.net/medium-editor/latest/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
-		
+
+		<script src="//use.typekit.net/rpy8gxl.js"></script>
+		<script>try{Typekit.load();}catch(e){}</script>
 
 	</head>
 
 	<body>
 
 		<div class="container">
+			
+			<header class="fixed">
+				<div class="container">
+					<div class="logo" style="line-height: 52px"><i class="ion-heart"></i></diV>
+					<a class="new-post button button-primary" style="cursor: pointer"><i class="ion-edit"></i>Publish</a>
+					<a class="cancel-post button" style="cursor: pointer" href="/dashboard"><i class="ion-close-round"></i>Cancel</a>
+					</div>
+			</header>
 
-			<?php
-
-				$servername = "localhost";
-				$username = "anand";
-				$password = "anand";
-				$dbname = "words2";
-
-				$conn = new mysqli($servername, $username, $password, $dbname);
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				} 
-
-				$sql = "SELECT * FROM content WHERE id = " . $_GET["id"];
-				$result = $conn->query($sql);
-
-				if ($result->num_rows > 0) {
-					while($row = $result->fetch_assoc()) {
-				?>
-
-				<div class="editable">
-					<?php echo urldecode($row["content"]); ?>
-				</div>
-
-				<?php
-					}
-				} else {
-					echo "0 results";
-				}
-				$conn->close();
-
-			?>
-
-			<form action="republish.php" method="post">
-				<textarea  style="display: none" id="contt" name="contt"></textarea>
-				<input style="display: none" name="id" value="<?php echo $_GET['id'] ?>">
-				<input type="submit" value="Save" class="save-btn">
-			</form>
-
-			<p style="margin-top: 30px;"><a href="index.php">Home</a> | <a href="logout.php">Log out</a></p>
-
+		<div class="text-options">
+			<div class="options">
+				<span class="no-overflow">
+					<span class="lengthen ui-inputs">
+						<button class="url useicons">&#xe005;</button>
+						<input class="url-input" type="text" placeholder="Type or Paste URL here"/>
+						<button class="bold">b</button>
+						<button class="italic">i</button>
+						<button class="quote">&rdquo;</button>
+					</span>
+				</span>
+			</div>
 		</div>
 
-		<script>var editor = new MediumEditor('.editable');</script>
+		<section class="writer">
+			
+			<header contenteditable="true" class="header">
+				<?php echo $row["title"]; ?>
+			</header>
 
+			<article contenteditable="true" class="content">
+
+				<?php echo htmlspecialchars_decode($row["data"]); ?>
+
+			</article>
+
+		</section>
+
+		<form action="save.php" id="saveeForm" method="post" style="display:none">
+			<?php echo '<input name="id" type="hidden" style="display:none" value="' . $row["id"] . '">'; ?>
+			<input name="title" value="<?php echo $row["title"]; ?>" id="title">
+			<input name="data" value="<?php echo $row["data"]; ?>" id="data">
+			<input type="submit" value="Save" class="savebtn button-primary">
+		</form>
+
+		<script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script type="text/javascript">
-			window.onload = function() {
-				document.querySelector(".editable").addEventListener("keyup", function() {
-					document.querySelector("#contt").innerHTML = this.innerHTML;
+			ZenPen.editor.init();
+			ZenPen.ui.init();
+		</script>
+		<script type="text/javascript">
+			$(function() {
+				$(".header").keyup(function() {
+					$("#title").val($(this).html());
 				});
-				setInterval(function() {
-					document.querySelector("#contt").innerHTML = document.querySelector(".editable").innerHTML;
-				}, 5000);
-			}
+				$(".content").keyup(function() {
+					$("#data").val($(this).html());
+				});
+				$(".new-post").click(function() {
+					$("#saveeForm").submit();
+				});
+			});
 		</script>
 
 	</body>
 
 </html>
+
+<?php
+
+	}
+
+?>
